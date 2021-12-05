@@ -238,24 +238,24 @@ class LinkedList implements DT{
         while(current!=null && current.getData()!=ID){
             current = current.next;
         }
-        if(current.next==null){
+        if(current != null && current.next==null){
             System.out.println("Key not Found!");
             return -1;
         }
-        return current.next.getData();
+        return current == null || current.next == null ? -1 :current.next.getData();
     }
 
     @Override
     public int prevKey(int ID) {
         Node current = head;
-        while(current!=null && current.next.getData()!=ID){
+        while(current!=null && current.next!=null && current.next.getData()!=ID){
             current = current.next;
         }
-        if(current.next==null){
+        if(current != null && current.next==null){
             System.out.println("Key not Found!");
             return -1;
         }
-        return current.getData();
+        return current == null ? -1 : current.getData();
     }
 
     @Override
@@ -272,7 +272,7 @@ class LinkedList implements DT{
                 count++;
             }
         }
-        if(current.next==null){
+        if(current != null && current.next==null){
             System.out.println("Key not Found!");
             return -1;
         }
