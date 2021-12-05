@@ -1,4 +1,4 @@
-public class AVLTree implements DT{
+public class AVLTree implements DT {
 	private AVLNode rootNode;
 	private int totalNodes;
 
@@ -22,7 +22,8 @@ public class AVLTree implements DT{
 		this.totalNodes = totalNodes;
 	}
 
-	public boolean containsKey(int studentID) {
+	@Override
+	public boolean contains(int studentID) {
 		return containsKey(rootNode, studentID);
 	}
 
@@ -36,15 +37,7 @@ public class AVLTree implements DT{
 		}
 		return true;
 	}
-	public AVLNode deleteRoot(){
-		if(rootNode==null){
-			return null;
-		}else {
-			AVLNode alTemp = new AVLNode(rootNode.studentID, rootNode.getStudentInfo());
-			remove(rootNode.studentID);
-			return alTemp;
-		}
-	}
+
 	public boolean insertNode(String studentInfo, int studentID) {
 		if (!containsKey(rootNode, studentID)) {
 			rootNode = insertNode(rootNode, studentInfo, studentID);
@@ -152,7 +145,16 @@ public class AVLTree implements DT{
 		updateHeightBalanceFactor(rootNode);
 		return balanceAVLTree(rootNode);
 	}
-
+	public AVLNode deleteRoot(){
+		if(rootNode==null){
+			return null;
+		}else {
+			AVLNode alTemp = new AVLNode(rootNode.studentID, rootNode.getStudentInfo());
+			remove(rootNode.studentID);
+			return alTemp;
+		}
+	}
+	
 	private AVLNode findMin(AVLNode rootNode) {
 		while (rootNode.leftNode != null)
 			rootNode = rootNode.leftNode;
@@ -219,90 +221,97 @@ public class AVLTree implements DT{
 		allKeys(this.getRootNode());
 	}
 
+	@Override
 	public int nextKey(int studentID) {
-
-		if(findSuccessor(rootNode, null, studentID)!=null)
-			return findSuccessor(rootNode, null, studentID).studentID;
-		else{
-			System.out.println("Element "+studentID+" not found!");
+		if (findSuccessorElement(rootNode, null, studentID) != null)
+			return findSuccessorElement(rootNode, null, studentID).studentID;
+		else {
+			System.out.println("Element " + studentID + " not found!");
 			return -1;
 		}
-	}
-	public static AVLNode findMinimum(AVLNode root)
-	{
-		while (root.leftNode != null) {
-			root = root.leftNode;
-		}
-
-		return root;
-	}
-
-	public static AVLNode findSuccessor(AVLNode root, AVLNode succ, int key)
-	{
-		// base case
-		if (root == null) {
-			return succ;
-		}
-		if (root.studentID == key)
-		{
-			if (root.rightNode != null) {
-				return findMinimum(root.rightNode);
-			}
-		}
-		else if (key < root.studentID)
-		{
-			succ = root;
-			return findSuccessor(root.leftNode, succ, key);
-		}
-		else {
-			return findSuccessor(root.rightNode, succ, key);
-		}
-		return succ;
-	}
-	public static AVLNode findMaximum(AVLNode root)
-	{
-		while (root.rightNode != null) {
-			root = root.rightNode;
-		}
-
-		return root;
-	}
-	public static AVLNode findPredecessor(AVLNode root, AVLNode prec, int key)
-	{
-		if (root == null) {
-			return prec;
-		}
-		if (root.studentID == key)
-		{
-			if (root.leftNode != null) {
-				return findMaximum(root.leftNode);
-			}
-		}
-		else if (key < root.studentID) {
-			return findPredecessor(root.leftNode, prec, key);
-		}
-		else {
-			prec = root;
-			return findPredecessor(root.rightNode, prec, key);
-		}
-		return prec;
 	}
 
 	@Override
 	public int prevKey(int ID) {
-		if(findPredecessor(rootNode, null, ID)!=null)
-			return findPredecessor(rootNode, null, ID).studentID;
-		else{
-			System.out.println("Element "+ID+" not found!");
+		if (findPredecessorElement(rootNode, null, ID) != null)
+			return findPredecessorElement(rootNode, null, ID).studentID;
+		else {
+			System.out.println("Element " + ID + " not found!");
 			return -1;
 		}
 	}
-	
-	public int rangeKey(int key1, int key2) {
-		for(int i=0; i< totalNodes; i++) {
-			
+
+	public static AVLNode findMinimum(AVLNode rootNode) {
+		while (rootNode.leftNode != null) {
+			rootNode = rootNode.leftNode;
 		}
-		return 0;
+		return rootNode;
+	}
+
+	public static AVLNode findSuccessorElement(AVLNode rootNode, AVLNode successor, int key) {
+		if (rootNode == null)
+			return successor;
+
+		if (rootNode.studentID == key) {
+			if (rootNode.rightNode != null)
+				return findMinimum(rootNode.rightNode);
+		} else if (key < rootNode.studentID) {
+			successor = rootNode;
+			return findSuccessorElement(rootNode.leftNode, successor, key);
+		} else
+			return findSuccessorElement(rootNode.rightNode, successor, key);
+
+		return successor;
+	}
+
+	public static AVLNode findMaximum(AVLNode rootNode) {
+		while (rootNode.rightNode != null)
+			rootNode = rootNode.rightNode;
+
+		return rootNode;
+	}
+
+	public static AVLNode findPredecessorElement(AVLNode rootNode, AVLNode predecessor, int key) {
+		if (rootNode == null)
+			return predecessor;
+
+		if (rootNode.studentID == key) {
+			if (rootNode.leftNode != null)
+				return findMaximum(rootNode.leftNode);
+		} else if (key < rootNode.studentID)
+			return findPredecessorElement(rootNode.leftNode, predecessor, key);
+		else {
+			predecessor = rootNode;
+			return findPredecessorElement(rootNode.rightNode, predecessor, key);
+		}
+		return predecessor;
+	}
+
+	@Override
+	public int rangeKey(int key1, int key2) {
+		if (rootNode == null) {
+			System.out.println("There are no records present in the tree.");
+			return 0;
+		}
+		if (getStudentInfo(rootNode, key1) == null) {
+			System.out.println("Key 1 doesn't exists!");
+			return 0;
+		} else if (getStudentInfo(rootNode, key2) == null) {
+			System.out.println("Key 2 doesn't exists!");
+			return 0;
+		}
+		return rangeRecursive(rootNode, key1, key2);
+	}
+
+	private int rangeRecursive(AVLNode node, int low, int high) {
+		if (node == null)
+			return 0;
+		if (node.studentID > low && node.studentID < high)
+			return 1 + this.rangeRecursive(node.leftNode, low, high) + this.rangeRecursive(node.rightNode, low, high);
+		else if (node.studentID < low)
+			return this.rangeRecursive(node.rightNode, low, high);
+		else
+			return this.rangeRecursive(node.leftNode, low, high);
 	}
 
 	class AVLNode {
