@@ -32,19 +32,43 @@ class Node{
         return val;
     }
 }
-interface DT{
-    public void addElement(int ID, String value);
-    public void remove(int ID);
-    public void allKeys();
-    public int nextKey(int ID);
-    public int prevKey(int ID);
-    public int rangeKey(int k1, int k2);
-    public String getValues(int k1);
-}
 class LinkedList implements DT{
-    Node head = null;
+    Node head;
+    int size = 0;
+    public LinkedList(){
+        head = null;
+    }
+    public LinkedList(LinkedList l1){
 
-
+        if(l1.head==null){
+            head = null;
+        }else {
+            head = null;
+            Node t1, t2, t3;
+            t2 = t3 = null;
+            t1 = l1.head;
+            while(t1 != null)
+            {
+                if (head == null)	// this happens only once
+                {
+                    t2 = new Node(t1.getData(), null);
+                    head = t2;
+                }
+                else
+                {
+                    t3 = new Node(t1.getData(), null);
+                    t2.next = t3;
+                    t2 = t3;
+                }
+                t1 = t1.next;
+            }
+            t2 = t3 = null;
+        }
+    }
+    public LinkedList clone(){
+        return new LinkedList(this);
+    }
+    public int size(){ return size;}
     public boolean insertBefore(int x, int y, String val){
         if(head == null){
             System.out.println("Head Null!");
@@ -131,6 +155,7 @@ class LinkedList implements DT{
             {
                 Node node = new Node(ID,head, value);
                 head=node;
+                size++;
             }
             else {
 
@@ -143,8 +168,25 @@ class LinkedList implements DT{
                 Node temp = new Node(ID ,null, value);
                 tempNode.next = temp;
                 temp.next=temp1;
+                size++;
             }
         }
+    }
+    public Node deleteStart(){
+        if(head == null){
+            System.out.println("Head Null!");
+            return null;
+        }
+        if(head.next == null){
+            Node temp = head;
+            head = null;
+            size--;
+            return temp;
+        }
+        Node temp = head;
+        head = head.next;
+        size--;
+        return temp;
     }
 
     @Override
@@ -152,6 +194,7 @@ class LinkedList implements DT{
         Node temp = head, prev = null;
         if (temp != null && temp.data == ID) {
             head = temp.next;
+            size--;
             return;
         }
 
@@ -162,6 +205,7 @@ class LinkedList implements DT{
         if (temp == null)
             return;
         prev.next = temp.next;
+        size--;
     }
 
     @Override
@@ -226,70 +270,50 @@ class LinkedList implements DT{
         return temp.getVal();
     }
 }
-class AVL implements DT{
 
-    @Override
-    public void addElement(int ID, String value) {
-
-    }
-
-    @Override
-    public void remove(int ID) {
-
-    }
-
-    @Override
-    public void allKeys() {
-
-    }
-
-    @Override
-    public int nextKey(int ID) {
-        return -1;
-    }
-
-    @Override
-    public int prevKey(int ID) {
-        return -1;
-    }
-
-    @Override
-    public int rangeKey(int k1, int k2) {
-        return -1;
-    }
-
-    @Override
-    public String getValues(int k1) {
-        return null;
-    }
-}
 class CleverSIDC{
     Object dataStructure;
     int sizeCount = 0;
     int sizeThreshold;
+    int flag = 0;
 
     public void SetSIDCThreshold (int size){
         sizeThreshold = size;
         dataStructure = new LinkedList();
     }
     public void add(CleverSIDC c, int ID, String value){
-        if(sizeCount<sizeThreshold){
+        if(sizeCount == 1000){
+            convertToAVL();
+        }
+        if(c.dataStructure instanceof LinkedList){
             LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
             ll.addElement(ID, value);
             sizeCount++;
         }else{
-
+            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
+            al.addElement(ID, value);
+            sizeCount++;
         }
     }
     public void convertToAVL(){
-        AVL temp = new AVL();
-
+        AVLTree temp = new AVLTree();
+        LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
+        LinkedList tempList = ll.clone();
+        while(ll.size()!=0){
+            temp.insertNode("empty", ll.deleteStart().getData());
+        }
+        dataStructure = temp;
+        System.out.println("Linked List converted to AVL TREE!");
+        temp.allKeys();
     }
 
     public void allKeys(CleverSIDC cs){
         if(cs.dataStructure instanceof LinkedList){
             LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
             ll.allKeys();
+        }else{
+            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
+            al.allKeys();
         }
     }
 
@@ -306,23 +330,28 @@ class CleverSIDC{
             return ll.getValues(key);
         }
         else{
-            return null;
+            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
+            return al.getValues(key);
         }
     }
     public int nextKey(CleverSIDC cs,int key){
         if(cs.dataStructure instanceof LinkedList){
             LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
             return ll.nextKey(key);
+        }else {
+            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
+            return al.nextKey(key);
         }
-        return -1;
     }
 
     public int prevKey(CleverSIDC cs,int key){
-        if(cs.dataStructure instanceof LinkedList){
+        if(cs.dataStructure instanceof LinkedList) {
             LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
             return ll.prevKey(key);
+        }else{
+            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
+            return al.prevKey(key);
         }
-        return -1;
     }
     public int rangeKey(CleverSIDC cs, int key1, int key2){
         if(cs.dataStructure instanceof LinkedList){
@@ -336,7 +365,7 @@ class CleverSIDC{
 
         File f = new File("C:\\Users\\Jhanvi Arora\\Desktop\\project2\\NASTA_test_files\\NASTA_test_file1.txt");
         CleverSIDC cs = new CleverSIDC();
-        cs.SetSIDCThreshold(1000);
+        cs.SetSIDCThreshold(50000);
         Scanner sc = new Scanner(f);
         while (sc.hasNextLine()) {
             String data = sc.nextLine();
@@ -346,11 +375,9 @@ class CleverSIDC{
         sc.close();
         cs.allKeys(cs);
         System.out.println();
-        System.out.println(cs.rangeKey(cs, 332247, 719504));
         System.out.println();
-        System.out.println(cs.prevKey(cs, 316150));
-        System.out.println(cs.nextKey(cs, 332538));
+        System.out.println(cs.prevKey(cs, 99960892));
+        System.out.println(cs.nextKey(cs, 99997635));
         cs.remove(cs, 65862);
-        cs.allKeys(cs);
     }
 }

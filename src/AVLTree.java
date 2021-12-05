@@ -1,5 +1,4 @@
-
-public class AVLTree {
+public class AVLTree implements DT{
 	private AVLNode rootNode;
 	private int totalNodes;
 
@@ -115,15 +114,6 @@ public class AVLTree {
 		rootNode.balanceFactor = rightNodeHeight - leftNodeHeight;
 	}
 
-	public boolean deleteNode(int studentID) {
-		if (containsKey(rootNode, studentID)) {
-			rootNode = deleteNode(rootNode, studentID);
-			totalNodes--;
-			return true;
-		}
-		return false;
-	}
-
 	private AVLNode deleteNode(AVLNode rootNode, int studentID) {
 		if (rootNode == null)
 			return null;
@@ -167,7 +157,7 @@ public class AVLTree {
 		return rootNode;
 	}
 
-	private void allKeys(AVLNode node) {
+	public void allKeys(AVLNode node) {
 		if (node == null) {
 			return;
 		}
@@ -176,7 +166,7 @@ public class AVLTree {
 		allKeys(node.rightNode);
 	}
 
-	private String getValues(int studentID) {
+	public String getValues(int studentID) {
 		if (rootNode == null)
 			return null;
 		AVLNode foundNode = getStudentInfo(rootNode, studentID);
@@ -199,30 +189,115 @@ public class AVLTree {
 		return null;
 	}
 
-	private int nextKey(int studentID) {
-		AVLNode foundNode = getStudentInfo(rootNode, studentID);
-		if (foundNode == null || foundNode.getRightNode() == null) {
-			return 0;
+	@Override
+	public void addElement(int studentID, String value) {
+		if (!containsKey(rootNode, studentID)) {
+			rootNode = insertNode(rootNode, value, studentID);
+			totalNodes++;
 		}
-		return foundNode.getRightNode().getStudentID();
 	}
 
-	private int prevKey(int studentID) {
-		AVLNode foundNode = getStudentInfo(rootNode, studentID);
-		if (foundNode == null || foundNode.getLeftNode() == null) {
-			return 0;
+	@Override
+	public void remove(int studentID) {
+		if (containsKey(rootNode, studentID)) {
+			rootNode = deleteNode(rootNode, studentID);
+			totalNodes--;
+			return;
 		}
-		return foundNode.getLeftNode().getStudentID();
+	}
+
+	@Override
+	public void allKeys() {
+		allKeys(this.getRootNode());
+	}
+
+	public int nextKey(int studentID) {
+
+		if(findSuccessor(rootNode, null, studentID)!=null)
+			return findSuccessor(rootNode, null, studentID).studentID;
+		else{
+			System.out.println("Element "+studentID+" not found!");
+			return -1;
+		}
+	}
+	public static AVLNode findMinimum(AVLNode root)
+	{
+		while (root.leftNode != null) {
+			root = root.leftNode;
+		}
+
+		return root;
+	}
+
+	public static AVLNode findSuccessor(AVLNode root, AVLNode succ, int key)
+	{
+		// base case
+		if (root == null) {
+			return succ;
+		}
+		if (root.studentID == key)
+		{
+			if (root.rightNode != null) {
+				return findMinimum(root.rightNode);
+			}
+		}
+		else if (key < root.studentID)
+		{
+			succ = root;
+			return findSuccessor(root.leftNode, succ, key);
+		}
+		else {
+			return findSuccessor(root.rightNode, succ, key);
+		}
+		return succ;
+	}
+	public static AVLNode findMaximum(AVLNode root)
+	{
+		while (root.rightNode != null) {
+			root = root.rightNode;
+		}
+
+		return root;
+	}
+	public static AVLNode findPredecessor(AVLNode root, AVLNode prec, int key)
+	{
+		if (root == null) {
+			return prec;
+		}
+		if (root.studentID == key)
+		{
+			if (root.leftNode != null) {
+				return findMaximum(root.leftNode);
+			}
+		}
+		else if (key < root.studentID) {
+			return findPredecessor(root.leftNode, prec, key);
+		}
+		else {
+			prec = root;
+			return findPredecessor(root.rightNode, prec, key);
+		}
+		return prec;
+	}
+
+	@Override
+	public int prevKey(int ID) {
+		if(findPredecessor(rootNode, null, ID)!=null)
+			return findPredecessor(rootNode, null, ID).studentID;
+		else{
+			System.out.println("Element "+ID+" not found!");
+			return -1;
+		}
 	}
 	
-	private int rangeKey(int key1, int key2) {
+	public int rangeKey(int key1, int key2) {
 		for(int i=0; i< totalNodes; i++) {
 			
 		}
 		return 0;
 	}
 
-	class AVLNode implements PrintableNode {
+	class AVLNode {
 		private int studentID;
 		private String studentInfo;
 		private int height;
@@ -283,28 +358,4 @@ public class AVLTree {
 			this.rightNode = rightNode;
 		}
 	}
-
-	public static void main(String args[]) {
-		int[] arr = { 90, 33, 89, 67, 35, 1, 9, 23, 77, 30 };
-		AVLTree avl = new AVLTree();
-		for (int i = 0; i < arr.length; i++) {
-			avl.insertNode(("z" + i), arr[i]);
-		}
-		System.out.println();
-		avl.allKeys(avl.rootNode);
-		System.out.println();
-		System.out.println(avl.getValues(23));
-		System.out.println(avl.getValues(24));
-		
-		System.out.println("Successor for key 24 : " + avl.nextKey(24));
-		System.out.println("Successor for key 30 : " + avl.nextKey(30));
-		System.out.println("Successor for key 35 : " + avl.nextKey(35));
-		System.out.println("Successor for key 33 : " + avl.nextKey(33));
-		
-		System.out.println("Successor for key 24 : " + avl.prevKey(24));
-		System.out.println("Successor for key 30 : " + avl.prevKey(30));
-		System.out.println("Successor for key 35 : " + avl.prevKey(35));
-		System.out.println("Successor for key 33 : " + avl.prevKey(33));
-	}
-
 }
