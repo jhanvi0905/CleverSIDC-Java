@@ -1,40 +1,87 @@
+/*
+Building element of Linked List.
+ */
 class Node{
     int data;
     String val;
     Node next;
 
+    /**
+     * Constructor.
+     * @param data data to be inserted.
+     * @param v value to be inserted.
+     */
     public Node(int data, String v) {
         this.data = data;
         this.next = null;
         this.val = v;
     }
+
+    /**
+     * Constructor.
+     * @param data data.
+     * @param n Next node.
+     * @param v value.
+     */
     public Node(int data, Node n, String v){
         this.data = data;
         this.next = n;
         this.val = v;
     }
+
+    /**
+     * get the data of node.
+     * @return data.
+     */
     public int getData() {
         return data;
     }
 
+    /**
+     * set the data.
+     * @param data data.
+     */
     public void setData(int data) {
         this.data = data;
     }
 
+    /**
+     * sets the info of node.
+     * @param val sets value of node.
+     */
     public void setVal(String val) {
         this.val = val;
     }
 
+    /**
+     * returns value of node.
+     * @return value of node.
+     */
     public String getVal() {
         return val;
     }
 }
+
+/**
+ * @author Jhanvi Arora, Zalak Patel.
+ *
+ * Class implementing LinkedList DataStructures and its operations.
+ */
 class LinkedList implements DT{
     Node head;
     int size = 0;
+
+    /**
+     * Constructor.
+     */
     public LinkedList(){
         head = null;
     }
+
+    /**
+     * Constructor.
+     * @param l1 Linkedlist
+     */
     public LinkedList(LinkedList l1){
 
         if(l1.head==null){
@@ -62,62 +109,31 @@ class LinkedList implements DT{
             t2 = t3 = null;
         }
     }
+
+    /**
+     * Clones and returns the LinkedList object.
+     * @return
+     */
     public LinkedList clone(){
         return new LinkedList(this);
     }
+
+    /**
+     * returns the size of Linkedlist
+     * @return size of linkedlist.
+     */
     public int size(){ return size;}
-    public boolean insertBefore(int x, int y, String val){
-        if(head == null){
-            System.out.println("Head Null!");
-            return false;
-        }else{
-            if(head.getData()==y){
-                Node newNode = new Node(x,head, val);
-                head = newNode;
-                newNode = null;
-                return true;
-            }
-            Node current = head;
-            while(current.next!= null && current.next.getData()!=y){
-                current=current.next;
-            }
-            System.out.println("Current Data: "+ current.getData());
-            if(current.next==null){
-                System.out.println("Not Found ");
-                return false;
-            }
-            Node newNode = new Node(x,current.next, val);
-            current.next = newNode;
-            newNode = null;
-            return  true;
-        }
-    }
-    public boolean insertAfter(int x, int y, String val){
-        if(head == null){
-            System.out.println("Head Null!");
-            return false;
-        }else{
-            Node current = head;
-            while(current!= null && current.getData()!=y){
-                current=current.next;
-            }
-            System.out.println("Current Data: "+ current.getData());
-            if(current.next==null){
-                System.out.println("Not Found ");
-                return false;
-            }
-            Node newNode = new Node(x,current.next, val);
-            current.next = newNode;
-            newNode = null;
-            return  true;
-        }
-    }
     
     @Override
     public boolean contains(int studentID) {
     	return find(studentID) != null;
     }
-    
+
+    /**
+     * finds an element in the linked list.
+     * @param x ID to find.
+     * @return the node.
+     */
     public Node find(int x){
         if(head == null){
             System.out.println("No node exists in the list!");
@@ -134,15 +150,6 @@ class LinkedList implements DT{
                 current= current.next;
             }
             return null;
-        }
-    }
-    public boolean replace(int x, int y){
-        Node toReplace = find(x);
-        if(toReplace!=null){
-            toReplace.setData(y);
-            return true;
-        }else{
-            return false;
         }
     }
 
@@ -175,6 +182,11 @@ class LinkedList implements DT{
             }
         }
     }
+
+    /**
+     * Deletes node from root.
+     * @return deleted node.
+     */
     public Node deleteStart(){
         if(head == null){
             System.out.println("Head Null!");
