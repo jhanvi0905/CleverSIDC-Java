@@ -120,7 +120,7 @@ class LinkedList implements DT{
     
     public Node find(int x){
         if(head == null){
-            System.out.println("Head Null!");
+            System.out.println("No node exists in the list!");
             return null;
         }
         if(head.getData() == x){
@@ -270,6 +270,12 @@ class LinkedList implements DT{
     @Override
     public String getValues(int k1) {
         Node temp = this.find(k1);
-        return temp.getVal();
+        if(temp != null) {
+        	return temp.getVal();
+        } else {
+        	System.out.println("Student Information with given student ID is not found.");
+        	return null;
+        }
+        
     }
 }
