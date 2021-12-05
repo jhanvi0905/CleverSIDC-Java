@@ -1,136 +1,158 @@
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Random;
 import java.util.Scanner;
 
-class CleverSIDC{
-    Object dataStructure;
-    int sizeCount = 0;
-    int sizeThreshold;
-    int flag = 0;
+class CleverSIDC {
+	DT dataStructure;
+	int sizeCount = 0;
+	int sizeThreshold;
+	int flag = 0;
 
-    public void SetSIDCThreshold (int size){
-        sizeThreshold = size;
-        dataStructure = new LinkedList();
-    }
-    public void add(CleverSIDC c, int ID, String value){
-        if(sizeCount == 1000){
-            convertToAVL();
-        }
-        if(c.dataStructure instanceof LinkedList){
-            LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
-            ll.addElement(ID, value);
-            sizeCount++;
-        }else{
-            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
-            al.addElement(ID, value);
-            sizeCount++;
-        }
-    }
-    public void convertToAVL(){
-        AVLTree temp = new AVLTree();
-        LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
-        LinkedList tempList = ll.clone();
-        while(ll.size()!=0){
-            Node toDelete = ll.deleteStart();
-            temp.insertNode(toDelete.getVal(), toDelete.getData());
-        }
-        dataStructure = temp;
-        System.out.println("Linked List converted to AVL TREE!");
-        temp.allKeys();
-    }
+	public void SetSIDCThreshold(int size) {
+		sizeThreshold = size;
+		dataStructure = size <= 1000 ? new LinkedList() : new AVLTree();
+	}
 
-    public void convertToLL(){
-        LinkedList lTemp = new LinkedList();
-        AVLTree alTemp = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
-        while(alTemp.getTotalNodes()!=0){
-            AVLTree.AVLNode toDelete = alTemp.deleteRoot();
-            lTemp.addElement(toDelete.getStudentID(), toDelete.getStudentInfo());
-        }
-        dataStructure = lTemp;
-        System.out.println("AVL Tree converted to LinkedList");
-        lTemp.allKeys();
-    }
+	public void add(CleverSIDC cs, int ID, String value) {
+		if (sizeCount == 1000) {
+			convertToAVL();
+		}
+		if(!cs.contains(cs, ID)) {
+			cs.dataStructure.addElement(ID, value);
+			sizeCount++;
+			System.out.println("Student ID : " + ID + " added.");
+		} else {
+			System.out.println("Key "+ ID +" already exists!");
+		}	
+	}
 
-    public void allKeys(CleverSIDC cs){
-        if(cs.dataStructure instanceof LinkedList){
-            LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
-            ll.allKeys();
-        }else{
-            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
-            al.allKeys();
-        }
-    }
+	public void convertToAVL() {
+		AVLTree temp = new AVLTree();
+		LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
+		while (ll.size() != 0) {
+			Node tempNode = ll.deleteStart();
+			temp.insertNode(tempNode.getVal(), tempNode.getData());
+		}
+		dataStructure = temp;
+		System.out.println("Linked List converted to AVL TREE!");
+		temp.allKeys();
+	}
 
-    public void remove(CleverSIDC cs,int key){
-        if(sizeCount==1001){
-            convertToLL();
-        }
-        if(cs.dataStructure instanceof LinkedList){
-            LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
-            ll.remove(key);
-            sizeCount--;
-        }else{
-            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
-            al.remove(key);
-            sizeCount--;
-        }
-    }
+	public void allKeys(CleverSIDC cs) {
+		cs.dataStructure.allKeys();
+	}
 
-    public String getValues(CleverSIDC cs,int key){
-        if(cs.dataStructure instanceof LinkedList){
-            LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
-            return ll.getValues(key);
-        }
-        else{
-            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
-            return al.getValues(key);
-        }
-    }
-    public int nextKey(CleverSIDC cs,int key){
-        if(cs.dataStructure instanceof LinkedList){
-            LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
-            return ll.nextKey(key);
-        }else {
-            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
-            return al.nextKey(key);
-        }
-    }
+	public void remove(CleverSIDC cs, int key) {
+		if (sizeCount == 1001) {
+			convertToLL();
+		}
+		cs.dataStructure.remove(key);
+		sizeCount--;
+	}
 
-    public int prevKey(CleverSIDC cs,int key){
-        if(cs.dataStructure instanceof LinkedList) {
-            LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
-            return ll.prevKey(key);
-        }else{
-            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
-            return al.prevKey(key);
-        }
-    }
-    public int rangeKey(CleverSIDC cs, int key1, int key2){
-        if(cs.dataStructure instanceof LinkedList){
-            LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
-            return ll.rangeKey(key1, key2);
-        }
-        return -1;
-    }
+	public void convertToLL() {
+		LinkedList lTemp = new LinkedList();
+		AVLTree alTemp = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
+		while (alTemp.getTotalNodes() != 0) {
+			AVLTree.AVLNode toDelete = alTemp.deleteRoot();
+			lTemp.addElement(toDelete.getStudentID(), toDelete.getStudentInfo());
+		}
+		dataStructure = lTemp;
+		System.out.println("AVL Tree converted to LinkedList");
+		lTemp.allKeys();
+	}
 
-    public static void main(String[] args) throws FileNotFoundException {
+	public String getValues(CleverSIDC cs, int key) {
+		return cs.dataStructure.getValues(key);
+	}
 
-        File f = new File("C:\\Users\\Jhanvi Arora\\Desktop\\project2\\NASTA_test_files\\NASTA_test_fileTry.txt");
-        CleverSIDC cs = new CleverSIDC();
-        cs.SetSIDCThreshold(50000);
-        Scanner sc = new Scanner(f);
-        while (sc.hasNextLine()) {
-            String data = sc.nextLine();
-            Integer dataToInsert = Integer.parseInt(data);
-            cs.add(cs, dataToInsert, "empty");
-        }
-        sc.close();
-        cs.allKeys(cs);
-        System.out.println();
-        System.out.println();
-        System.out.println(cs.prevKey(cs, 99960892));
-        System.out.println(cs.nextKey(cs, 99997635));
-        cs.remove(cs, 65862);
-        cs.remove(cs, 182965);
-    }
+	public int nextKey(CleverSIDC cs, int key) {
+		return cs.dataStructure.nextKey(key);
+	}
+
+	public int prevKey(CleverSIDC cs, int key) {
+		return cs.dataStructure.prevKey(key);
+	}
+
+	public int rangeKey(CleverSIDC cs, int key1, int key2) {
+		return cs.dataStructure.rangeKey(key1, key2);
+	}
+
+	public boolean contains(CleverSIDC cs, int key) {
+		return cs.dataStructure.contains(key);
+	}
+
+	public static int generateRandomDigits(CleverSIDC cs) {
+		int m = (int) Math.pow(10, 7);
+		int randomNum;
+		randomNum = m + new Random().nextInt(9 * m);
+		while (cs.contains(cs, randomNum)) {
+			randomNum = m + new Random().nextInt(9 * m);
+		}
+		return randomNum;
+	}
+
+	public static void main(String[] args) throws FileNotFoundException {
+		Scanner inputSc = new Scanner(System.in);
+		CleverSIDC cs = new CleverSIDC();
+		System.out.println("Please provide threshold value for SIDC : ");
+		int threshold = inputSc.nextInt();
+		cs.SetSIDCThreshold(threshold);
+		System.out.println("Provide Y to read the input from file or else provide N.");
+		String inputType = inputSc.next();
+
+		if (inputType.equalsIgnoreCase("Y")) {
+			System.out.println("Please provide file name to read the data : ");
+			String inputFileStr = inputSc.next();
+			File currentWorkingDir = new File(System.getProperty("user.dir"));
+			File inputFile = new File(currentWorkingDir.getAbsolutePath() + "/NASTA_test_files/" + inputFileStr);
+			Scanner sc = new Scanner(inputFile);
+			while (sc.hasNextLine()) {
+				String data = sc.nextLine();
+				Integer dataToInsert = Integer.parseInt(data);
+				cs.add(cs, dataToInsert, "S_" + dataToInsert);
+			}
+			sc.close();
+			System.out.println();
+			System.out.println();
+			System.out.println("Previous Key for 99960892 > " + cs.prevKey(cs, 99960892));
+			System.out.println("Next Key for 99997635 > " + cs.nextKey(cs, 99997635));
+			System.out.println("Existence of 65862 > " + cs.contains(cs, 65862));
+			System.out.println("Removing 65862");
+			cs.remove(cs, 65862);
+			System.out.println("Existence of 65862 > " + cs.contains(cs, 65862));
+			System.out.println("Existence of 83747069 > " + cs.contains(cs, 83747069));
+			System.out.println("Existence of 21084975 > " + cs.contains(cs, 21084975));
+			System.out.println("Size of the Student tracking system > " + cs.sizeCount);
+			System.out.println("Number of keys between 03326261 and 03322659 > " + cs.rangeKey(cs, 3326261, 33237174));
+		} else {
+			System.out.println("Provide Y to randomly generate the data or N insert the data : ");
+			String randomOrUserGiven = inputSc.next();
+			if (randomOrUserGiven.equalsIgnoreCase("Y")) {
+				System.out.println("Randomly generating 20 student IDs and trying to insert them.");
+				for (int i = 0; i < 20; i++) {
+					int studentID = generateRandomDigits(cs);
+					System.out.println("Generated student ID : " + studentID);
+					cs.add(cs, studentID, "S_" + studentID);
+				}
+				System.out.println("Size of the Student tracking system > " + cs.sizeCount);
+				System.out.println("All keys present in the Student tracking system >");
+				cs.allKeys(cs);
+			} else {
+				System.out.println("Enter number of records you want to insert > ");
+				int inputSize = inputSc.nextInt();
+				for (int i = 0; i < inputSize; i++) {
+					System.out.println("Enter student ID : ");
+					int studentID = inputSc.nextInt();
+					System.out.println("Enter student Info in format(Family Name, First Name, and DOB) : ");
+					String studentInfo = inputSc.next();
+					cs.add(cs, studentID, studentInfo);
+				}
+				System.out.println("All keys present in the Student tracking system >");
+				cs.allKeys(cs);
+			}
+		}
+		inputSc.close();
+	}
 }
