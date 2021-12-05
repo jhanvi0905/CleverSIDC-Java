@@ -165,16 +165,19 @@ class CleverSIDC {
 		}
 		return randomNum;
 	}
-
+	
+	/**
+     	* Driver function to read file, take user input to feed into clever SIDC.
+	*
+     	*/
 	public static void main(String[] args) throws FileNotFoundException {
 		Scanner inputSc = new Scanner(System.in);
 		CleverSIDC cs = new CleverSIDC();
+		System.out.println("Please provide threshold value for SIDC : ");
+		int threshold = inputSc.nextInt();
+		cs.SetSIDCThreshold(threshold);
 		System.out.println("Provide Y to read the input from file or else provide N.");
 		String inputType = inputSc.next();
-
-        System.out.println("Please provide threshold value for SIDC : ");
-        int threshold = inputSc.nextInt();
-        cs.SetSIDCThreshold(threshold);
 
 		if (inputType.equalsIgnoreCase("Y")) {
 			System.out.println("Please provide file name to read the data : ");
@@ -184,23 +187,22 @@ class CleverSIDC {
 			Scanner sc = new Scanner(inputFile);
 			while (sc.hasNextLine()) {
 				String data = sc.nextLine();
-                System.out.println(data);
 				Integer dataToInsert = Integer.parseInt(data);
 				cs.add(cs, dataToInsert, "S_" + dataToInsert);
 			}
 			sc.close();
 			System.out.println();
 			System.out.println();
-			System.out.println("Previous Key for 99960892 > " + cs.prevKey(cs, 99960892));
-			System.out.println("Next Key for 99997635 > " + cs.nextKey(cs, 99997635));
-			System.out.println("Existence of 65862 > " + cs.contains(cs, 65862));
-			System.out.println("Removing 65862");
-			cs.remove(cs, 65862);
-			System.out.println("Existence of 65862 > " + cs.contains(cs, 65862));
+			System.out.println("Previous Key for 78829726 > " + cs.prevKey(cs, 78829726));
+			System.out.println("Next Key for 40350612 > " + cs.nextKey(cs, 40350612));
+			System.out.println("Existence of 89105565 > " + cs.contains(cs, 89105565));
+			System.out.println("Removing 89105565");
+			cs.remove(cs, 89105565);
+			System.out.println("Existence of 89105565 > " + cs.contains(cs, 89105565));
 			System.out.println("Existence of 83747069 > " + cs.contains(cs, 83747069));
-			System.out.println("Existence of 21084975 > " + cs.contains(cs, 21084975));
 			System.out.println("Size of the Student tracking system > " + cs.sizeCount);
-			System.out.println("Number of keys between 03326261 and 03322659 > " + cs.rangeKey(cs, 3326261, 33237174));
+			System.out.println("Number of keys between 22439726 and 69894475 > ");
+			System.out.println(cs.rangeKey(cs, 22439726, 69894475));
 		} else {
 			System.out.println("Provide Y to randomly generate the data or N to insert the data : ");
 			String randomOrUserGiven = inputSc.next();
@@ -225,6 +227,8 @@ class CleverSIDC {
 				}
 				System.out.println("All keys present in the Student tracking system >");
 				cs.allKeys(cs);
+				System.out.println();
+				System.out.println("Get values for student ID 89898989 returns : " + cs.getValues(cs, 89898989));
 			}
 		}
 		inputSc.close();
