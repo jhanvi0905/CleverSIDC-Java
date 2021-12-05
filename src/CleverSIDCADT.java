@@ -18,13 +18,13 @@ class CleverSIDC {
 		if (sizeCount == 1000) {
 			convertToAVL();
 		}
-		if(!cs.contains(cs, ID)) {
+		if (!cs.contains(cs, ID)) {
 			cs.dataStructure.addElement(ID, value);
 			sizeCount++;
 			System.out.println("Student ID : " + ID + " added.");
 		} else {
-			System.out.println("Key "+ ID +" already exists!");
-		}	
+			System.out.println("Key " + ID + " already exists!");
+		}
 	}
 
 	public void convertToAVL() {
@@ -96,9 +96,6 @@ class CleverSIDC {
 	public static void main(String[] args) throws FileNotFoundException {
 		Scanner inputSc = new Scanner(System.in);
 		CleverSIDC cs = new CleverSIDC();
-		System.out.println("Please provide threshold value for SIDC : ");
-		int threshold = inputSc.nextInt();
-		cs.SetSIDCThreshold(threshold);
 		System.out.println("Provide Y to read the input from file or else provide N.");
 		String inputType = inputSc.next();
 
@@ -127,11 +124,14 @@ class CleverSIDC {
 			System.out.println("Size of the Student tracking system > " + cs.sizeCount);
 			System.out.println("Number of keys between 03326261 and 03322659 > " + cs.rangeKey(cs, 3326261, 33237174));
 		} else {
-			System.out.println("Provide Y to randomly generate the data or N insert the data : ");
+			System.out.println("Please provide threshold value for SIDC : ");
+			int threshold = inputSc.nextInt();
+			cs.SetSIDCThreshold(threshold);
+			System.out.println("Provide Y to randomly generate the data or N to insert the data : ");
 			String randomOrUserGiven = inputSc.next();
 			if (randomOrUserGiven.equalsIgnoreCase("Y")) {
-				System.out.println("Randomly generating 20 student IDs and trying to insert them.");
-				for (int i = 0; i < 20; i++) {
+				System.out.println("Randomly generating " + threshold + " student IDs and trying to insert them.");
+				for (int i = 0; i < threshold; i++) {
 					int studentID = generateRandomDigits(cs);
 					System.out.println("Generated student ID : " + studentID);
 					cs.add(cs, studentID, "S_" + studentID);
@@ -140,9 +140,8 @@ class CleverSIDC {
 				System.out.println("All keys present in the Student tracking system >");
 				cs.allKeys(cs);
 			} else {
-				System.out.println("Enter number of records you want to insert > ");
-				int inputSize = inputSc.nextInt();
-				for (int i = 0; i < inputSize; i++) {
+				System.out.println("Provide student details for " + threshold + " number of records.");
+				for (int i = 0; i < threshold; i++) {
 					System.out.println("Enter student ID : ");
 					int studentID = inputSc.nextInt();
 					System.out.println("Enter student Info in format(Family Name, First Name, and DOB) : ");
