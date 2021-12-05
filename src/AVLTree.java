@@ -1,23 +1,53 @@
+/**
+ * AVL Tree representation of Student Tracking system, provides add, delete,
+ * retrieve functions
+ *
+ */
 public class AVLTree implements DT {
 	private AVLNode rootNode;
 	private int totalNodes;
 
+	/**
+	 * Gets Height of Tree
+	 * 
+	 * @return height
+	 */
 	public int getTreeHeight() {
 		return rootNode == null ? 0 : rootNode.height;
 	}
 
+	/**
+	 * Gets Root node of AVL Tree
+	 * 
+	 * @return root node
+	 */
 	public AVLNode getRootNode() {
 		return rootNode;
 	}
 
+	/**
+	 * Sets root node of AVL tree
+	 * 
+	 * @param rootNode root node
+	 */
 	public void setRootNode(AVLNode rootNode) {
 		this.rootNode = rootNode;
 	}
 
+	/**
+	 * Gets total nodes present in tree
+	 * 
+	 * @return total nodes
+	 */
 	public int getTotalNodes() {
 		return totalNodes;
 	}
 
+	/**
+	 * Sets total nodes in the tree
+	 * 
+	 * @param totalNodes total nodes
+	 */
 	public void setTotalNodes(int totalNodes) {
 		this.totalNodes = totalNodes;
 	}
@@ -27,6 +57,13 @@ public class AVLTree implements DT {
 		return containsKey(rootNode, studentID);
 	}
 
+	/**
+	 * Recursive function to find existence of student ID
+	 * 
+	 * @param rootNode  Root node at each iteration
+	 * @param studentID student ID to find
+	 * @return true if it exists or else false
+	 */
 	public boolean containsKey(AVLNode rootNode, int studentID) {
 		if (rootNode == null)
 			return false;
@@ -38,6 +75,13 @@ public class AVLTree implements DT {
 		return true;
 	}
 
+	/**
+	 * Inserts new node with given student information in the AVL tree
+	 * 
+	 * @param studentInfo student fname, lname, DOB
+	 * @param studentID   student ID in 8 digits number format
+	 * @return true if insertion is successful or else false
+	 */
 	public boolean insertNode(String studentInfo, int studentID) {
 		if (!containsKey(rootNode, studentID)) {
 			rootNode = insertNode(rootNode, studentInfo, studentID);
@@ -47,6 +91,14 @@ public class AVLTree implements DT {
 		return false;
 	}
 
+	/**
+	 * Recursive function to insert the node at the right place
+	 * 
+	 * @param rootNode    root node at each iteration for drill down
+	 * @param studentInfo student information like fname, lname, dob
+	 * @param studentID   student ID in 8 digits format
+	 * @return
+	 */
 	private AVLNode insertNode(AVLNode rootNode, String studentInfo, int studentID) {
 
 		if (rootNode == null)
@@ -61,6 +113,13 @@ public class AVLTree implements DT {
 		return balanceAVLTree(rootNode);
 	}
 
+	/**
+	 * Balances AVL tree with correct levels when new node is inserted or any node
+	 * is deleted
+	 * 
+	 * @param rootNode root node of the tree
+	 * @return balance node
+	 */
 	private AVLNode balanceAVLTree(AVLNode rootNode) {
 		if (rootNode.balanceFactor == -2) {
 			return (rootNode.leftNode.balanceFactor <= 0) ? executeLeftLeftCase(rootNode)
@@ -72,24 +131,54 @@ public class AVLTree implements DT {
 		return rootNode;
 	}
 
+	/**
+	 * Performs balancing when there is issue in left left side
+	 * 
+	 * @param rootNode root node of the AVL tree
+	 * @return AVL node rotated correctly
+	 */
 	private AVLNode executeLeftLeftCase(AVLNode rootNode) {
 		return rotateRight(rootNode);
 	}
 
+	/**
+	 * Performs balancing when there is issue in right right side
+	 * 
+	 * @param rootNode root node of the AVL tree
+	 * @return AVL node rotated correctly
+	 */
 	private AVLNode executeRightRightCase(AVLNode rootNode) {
 		return rotateLeft(rootNode);
 	}
 
+	/**
+	 * Performs balancing when there is issue in right left side
+	 * 
+	 * @param rootNode root node of the AVL tree
+	 * @return AVL node rotated correctly
+	 */
 	private AVLNode executeRightLeftCase(AVLNode rootNode) {
 		rootNode.rightNode = rotateRight(rootNode.rightNode);
 		return executeRightRightCase(rootNode);
 	}
 
+	/**
+	 * Performs balancing when there is issue in left right side
+	 * 
+	 * @param rootNode root node of the AVL tree
+	 * @return AVL node rotated correctly
+	 */
 	private AVLNode executeLeftRightCase(AVLNode rootNode) {
 		rootNode.leftNode = rotateLeft(rootNode.leftNode);
 		return executeLeftLeftCase(rootNode);
 	}
 
+	/**
+	 * Rotates node given to the left side
+	 * 
+	 * @param rootNode node to be rotated
+	 * @return new parent after rotation
+	 */
 	private AVLNode rotateLeft(AVLNode rootNode) {
 		AVLNode newParent = rootNode.rightNode;
 		rootNode.rightNode = newParent.leftNode;
@@ -99,6 +188,12 @@ public class AVLTree implements DT {
 		return newParent;
 	}
 
+	/**
+	 * Rotates node given to the right side
+	 * 
+	 * @param rootNode node to be rotated
+	 * @return new parent after rotation
+	 */
 	private AVLNode rotateRight(AVLNode rootNode) {
 		AVLNode newParent = rootNode.leftNode;
 		rootNode.leftNode = newParent.rightNode;
@@ -108,6 +203,12 @@ public class AVLTree implements DT {
 		return newParent;
 	}
 
+	/**
+	 * Updates height and balance factor of node given in input
+	 * 
+	 * @param rootNode node to be balanced
+	 * @return
+	 */
 	private void updateHeightBalanceFactor(AVLNode rootNode) {
 		int leftNodeHeight = (rootNode.leftNode == null) ? -1 : rootNode.leftNode.height;
 		int rightNodeHeight = (rootNode.rightNode == null) ? -1 : rootNode.rightNode.height;
@@ -115,6 +216,13 @@ public class AVLTree implements DT {
 		rootNode.balanceFactor = rightNodeHeight - leftNodeHeight;
 	}
 
+	/**
+	 * Deletes node with a given student ID
+	 * 
+	 * @param rootNode  current root of the AVL tree at each iterations
+	 * @param studentID student ID
+	 * @return deleted node
+	 */
 	private AVLNode deleteNode(AVLNode rootNode, int studentID) {
 		if (rootNode == null)
 			return null;
@@ -145,28 +253,51 @@ public class AVLTree implements DT {
 		updateHeightBalanceFactor(rootNode);
 		return balanceAVLTree(rootNode);
 	}
-	public AVLNode deleteRoot(){
-		if(rootNode==null){
+
+	/**
+	 * Delete the Root of the AVL tree
+	 * 
+	 * @return deleted node
+	 */
+	public AVLNode deleteRoot() {
+		if (rootNode == null) {
 			return null;
-		}else {
+		} else {
 			AVLNode alTemp = new AVLNode(rootNode.studentID, rootNode.getStudentInfo());
 			remove(rootNode.studentID);
 			return alTemp;
 		}
 	}
-	
-	private AVLNode findMin(AVLNode rootNode) {
+
+	/**
+	 * Finds minimum element in left side
+	 * 
+	 * @param rootNode root node of the AVL tree
+	 * @return minimum element
+	 */
+	private static AVLNode findMin(AVLNode rootNode) {
 		while (rootNode.leftNode != null)
 			rootNode = rootNode.leftNode;
 		return rootNode;
 	}
 
-	private AVLNode findMax(AVLNode rootNode) {
+	/**
+	 * Finds maximum element in right side
+	 * 
+	 * @param rootNode root node of the AVL tree
+	 * @return maximum element
+	 */
+	private static AVLNode findMax(AVLNode rootNode) {
 		while (rootNode.rightNode != null)
 			rootNode = rootNode.rightNode;
 		return rootNode;
 	}
 
+	/**
+	 * Returns all keys of the AVL tree in a sorted order (In order traversal)
+	 * 
+	 * @param node node at current iteration
+	 */
 	public void allKeys(AVLNode node) {
 		if (node == null) {
 			return;
@@ -186,6 +317,13 @@ public class AVLTree implements DT {
 		return "Value for Key " + studentID + " is :" + foundNode.studentInfo;
 	}
 
+	/**
+	 * Finding student information recursively by passing student ID
+	 * 
+	 * @param rootNode root node to consider at each iteration
+	 * @param studentID student ID
+	 * @return
+	 */
 	private AVLNode getStudentInfo(AVLNode rootNode, int studentID) {
 		if (rootNode == null)
 			return null;
@@ -199,6 +337,7 @@ public class AVLTree implements DT {
 		return null;
 	}
 
+	
 	@Override
 	public void addElement(int studentID, String value) {
 		if (!containsKey(rootNode, studentID)) {
@@ -241,20 +380,21 @@ public class AVLTree implements DT {
 		}
 	}
 
-	public static AVLNode findMinimum(AVLNode rootNode) {
-		while (rootNode.leftNode != null) {
-			rootNode = rootNode.leftNode;
-		}
-		return rootNode;
-	}
-
+	/**
+	 * Finds successor element of given key
+	 * 
+	 * @param rootNode root node of AVL tree
+	 * @param successor previous successor node
+	 * @param key updated successor
+	 * @return
+	 */
 	public static AVLNode findSuccessorElement(AVLNode rootNode, AVLNode successor, int key) {
 		if (rootNode == null)
 			return successor;
 
 		if (rootNode.studentID == key) {
 			if (rootNode.rightNode != null)
-				return findMinimum(rootNode.rightNode);
+				return findMin(rootNode.rightNode);
 		} else if (key < rootNode.studentID) {
 			successor = rootNode;
 			return findSuccessorElement(rootNode.leftNode, successor, key);
@@ -264,20 +404,21 @@ public class AVLTree implements DT {
 		return successor;
 	}
 
-	public static AVLNode findMaximum(AVLNode rootNode) {
-		while (rootNode.rightNode != null)
-			rootNode = rootNode.rightNode;
-
-		return rootNode;
-	}
-
+	/**
+	 * Finds predecessor element of given key
+	 * 
+	 * @param rootNode root node of AVL tree
+	 * @param successor previous predecessor node
+	 * @param key updated predecessor
+	 * @return
+	 */
 	public static AVLNode findPredecessorElement(AVLNode rootNode, AVLNode predecessor, int key) {
 		if (rootNode == null)
 			return predecessor;
 
 		if (rootNode.studentID == key) {
 			if (rootNode.leftNode != null)
-				return findMaximum(rootNode.leftNode);
+				return findMax(rootNode.leftNode);
 		} else if (key < rootNode.studentID)
 			return findPredecessorElement(rootNode.leftNode, predecessor, key);
 		else {
@@ -287,6 +428,7 @@ public class AVLTree implements DT {
 		return predecessor;
 	}
 
+	
 	@Override
 	public int rangeKey(int key1, int key2) {
 		if (rootNode == null) {
@@ -303,6 +445,14 @@ public class AVLTree implements DT {
 		return rangeRecursive(rootNode, key1, key2);
 	}
 
+	/**
+	 * Recursive function to find number of nodes present in given range
+	 * 
+	 * @param node current node in iteration
+	 * @param low lower limit
+	 * @param high higher limit
+	 * @return number of nodes in range
+	 */
 	private int rangeRecursive(AVLNode node, int low, int high) {
 		if (node == null)
 			return 0;
@@ -314,6 +464,10 @@ public class AVLTree implements DT {
 			return this.rangeRecursive(node.leftNode, low, high);
 	}
 
+	/**
+	 * Node class of AVL Tree
+	 *
+	 */
 	class AVLNode {
 		private int studentID;
 		private String studentInfo;
@@ -322,55 +476,121 @@ public class AVLTree implements DT {
 		private AVLNode leftNode;
 		private AVLNode rightNode;
 
+		/**
+		 * Parameterized constructor of AVL tree
+		 * 
+		 * @param studentID student ID
+		 * @param studentInfo student information
+		 */
 		public AVLNode(int studentID, String studentInfo) {
 			this.studentID = studentID;
 			this.studentInfo = studentInfo;
 		}
 
+		/**
+		 * Gets student Id of node
+		 * 
+		 * @return student id
+		 */
 		public int getStudentID() {
 			return studentID;
 		}
 
+		/**
+		 * Sets student id of node
+		 * 
+		 * @param studentID student id to be set
+		 */
 		public void setStudentID(int studentID) {
 			this.studentID = studentID;
 		}
 
+		/**
+		 * Gets student information
+		 * 
+		 * @return student information
+		 */
 		public String getStudentInfo() {
 			return studentInfo;
 		}
 
+		/**
+		 * Sets student information
+		 * 
+		 * @param studentInfo student information
+		 */
 		public void setStudentInfo(String studentInfo) {
 			this.studentInfo = studentInfo;
 		}
 
+		/**
+		 * Gets height of the node in AVL tree
+		 * 
+		 * @return height of node
+		 */
 		public int getHeight() {
 			return height;
 		}
 
+		/**
+		 * Sets height of the node in AVL tree
+		 * 
+		 * @param height of node to be set
+		 */
 		public void setHeight(int height) {
 			this.height = height;
 		}
 
+		/**
+		 * Gets balance factor of the node in AVL tree
+		 * 
+		 * @return balance factor
+		 */
 		public int getBalanceFactor() {
 			return balanceFactor;
 		}
 
+		/**
+		 * Sets balance factor of the node in AVL tree
+		 * 
+		 * @param balanceFactor balance Factor
+		 */
 		public void setBalanceFactor(int balanceFactor) {
 			this.balanceFactor = balanceFactor;
 		}
 
+		/**
+		 * Gets Left node of current node
+		 * 
+		 * @return left node
+		 */
 		public AVLNode getLeftNode() {
 			return leftNode;
 		}
 
+		/**
+		 * Sets Left node of current node
+		 * 
+		 * @param left node
+		 */
 		public void setLeftNode(AVLNode leftNode) {
 			this.leftNode = leftNode;
 		}
 
+		/**
+		 * Gets Right node of current node
+		 * 
+		 * @return left node
+		 */
 		public AVLNode getRightNode() {
 			return rightNode;
 		}
 
+		/**
+		 * Sets Right node of current node
+		 * 
+		 * @param right node
+		 */
 		public void setRightNode(AVLNode rightNode) {
 			this.rightNode = rightNode;
 		}
