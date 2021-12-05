@@ -17,14 +17,6 @@ class Node{
         return data;
     }
 
-    public void setData(int data) {
-        this.data = data;
-    }
-
-    public void setVal(String val) {
-        this.val = val;
-    }
-
     public String getVal() {
         return val;
     }
@@ -46,7 +38,7 @@ class LinkedList implements DT{
             t1 = l1.head;
             while(t1 != null)
             {
-                if (head == null)	// this happens only once
+                if (head == null)
                 {
                     t2 = new Node(t1.getData(), null);
                     head = t2;
@@ -66,52 +58,7 @@ class LinkedList implements DT{
         return new LinkedList(this);
     }
     public int size(){ return size;}
-    public boolean insertBefore(int x, int y, String val){
-        if(head == null){
-            System.out.println("Head Null!");
-            return false;
-        }else{
-            if(head.getData()==y){
-                Node newNode = new Node(x,head, val);
-                head = newNode;
-                newNode = null;
-                return true;
-            }
-            Node current = head;
-            while(current.next!= null && current.next.getData()!=y){
-                current=current.next;
-            }
-            System.out.println("Current Data: "+ current.getData());
-            if(current.next==null){
-                System.out.println("Not Found ");
-                return false;
-            }
-            Node newNode = new Node(x,current.next, val);
-            current.next = newNode;
-            newNode = null;
-            return  true;
-        }
-    }
-    public boolean insertAfter(int x, int y, String val){
-        if(head == null){
-            System.out.println("Head Null!");
-            return false;
-        }else{
-            Node current = head;
-            while(current!= null && current.getData()!=y){
-                current=current.next;
-            }
-            System.out.println("Current Data: "+ current.getData());
-            if(current.next==null){
-                System.out.println("Not Found ");
-                return false;
-            }
-            Node newNode = new Node(x,current.next, val);
-            current.next = newNode;
-            newNode = null;
-            return  true;
-        }
-    }
+
     public Node find(int x){
         if(head == null){
             System.out.println("Head Null!");
@@ -128,15 +75,6 @@ class LinkedList implements DT{
                 current= current.next;
             }
             return null;
-        }
-    }
-    public boolean replace(int x, int y){
-        Node toReplace = find(x);
-        if(toReplace!=null){
-            toReplace.setData(y);
-            return true;
-        }else{
-            return false;
         }
     }
 
@@ -169,6 +107,7 @@ class LinkedList implements DT{
             }
         }
     }
+
     public Node deleteStart(){
         if(head == null){
             System.out.println("Head Null!");

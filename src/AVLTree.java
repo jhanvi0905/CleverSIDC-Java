@@ -36,7 +36,15 @@ public class AVLTree implements DT{
 		}
 		return true;
 	}
-
+	public AVLNode deleteRoot(){
+		if(rootNode==null){
+			return null;
+		}else {
+			AVLNode alTemp = new AVLNode(rootNode.studentID, rootNode.getStudentInfo());
+			remove(rootNode.studentID);
+			return alTemp;
+		}
+	}
 	public boolean insertNode(String studentInfo, int studentID) {
 		if (!containsKey(rootNode, studentID)) {
 			rootNode = insertNode(rootNode, studentInfo, studentID);

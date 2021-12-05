@@ -31,11 +31,24 @@ class CleverSIDC{
         LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
         LinkedList tempList = ll.clone();
         while(ll.size()!=0){
-            temp.insertNode("empty", ll.deleteStart().getData());
+            Node toDelete = ll.deleteStart();
+            temp.insertNode(toDelete.getVal(), toDelete.getData());
         }
         dataStructure = temp;
         System.out.println("Linked List converted to AVL TREE!");
         temp.allKeys();
+    }
+
+    public void convertToLL(){
+        LinkedList lTemp = new LinkedList();
+        AVLTree alTemp = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
+        while(alTemp.getTotalNodes()!=0){
+            AVLTree.AVLNode toDelete = alTemp.deleteRoot();
+            lTemp.addElement(toDelete.getStudentID(), toDelete.getStudentInfo());
+        }
+        dataStructure = lTemp;
+        System.out.println("AVL Tree converted to LinkedList");
+        lTemp.allKeys();
     }
 
     public void allKeys(CleverSIDC cs){
@@ -49,9 +62,17 @@ class CleverSIDC{
     }
 
     public void remove(CleverSIDC cs,int key){
+        if(sizeCount==1001){
+            convertToLL();
+        }
         if(cs.dataStructure instanceof LinkedList){
             LinkedList ll = dataStructure instanceof LinkedList ? ((LinkedList) dataStructure) : null;
             ll.remove(key);
+            sizeCount--;
+        }else{
+            AVLTree al = dataStructure instanceof AVLTree ? ((AVLTree) dataStructure) : null;
+            al.remove(key);
+            sizeCount--;
         }
     }
 
@@ -94,7 +115,7 @@ class CleverSIDC{
 
     public static void main(String[] args) throws FileNotFoundException {
 
-        File f = new File("C:\\Users\\Jhanvi Arora\\Desktop\\project2\\NASTA_test_files\\NASTA_test_file1.txt");
+        File f = new File("C:\\Users\\Jhanvi Arora\\Desktop\\project2\\NASTA_test_files\\NASTA_test_fileTry.txt");
         CleverSIDC cs = new CleverSIDC();
         cs.SetSIDCThreshold(50000);
         Scanner sc = new Scanner(f);
@@ -110,5 +131,6 @@ class CleverSIDC{
         System.out.println(cs.prevKey(cs, 99960892));
         System.out.println(cs.nextKey(cs, 99997635));
         cs.remove(cs, 65862);
+        cs.remove(cs, 182965);
     }
 }
